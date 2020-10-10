@@ -1,0 +1,120 @@
+{% load static %}
+
+<!doctype html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- オリジナルのCSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/common.css' %}">
+    {% block script%}{% endblock script %}
+    {% block css%}{% endblock css %}
+    <title>まっちグルメ</title>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-right">
+        <a class="navbar-brand" href="{% url 'eatmap:index' %}">まっちグルメ</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'eatmap:index' %}">TOP<span class="sr-only">(current)</span></a>
+              </li>
+            </ul>
+
+            <ul class="navbar-nav mr-auto">
+              {% if user.is_authenticated %}
+              <li>
+                <a class="nav-item nav-link" href="{% url 'eatmap:logout' %}">ログアウト</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-item nav-link" href="{% url 'eatmap:login' %}">ログイン</a>
+              </li>
+              <li>
+                <a class="nav-item nav-link" href="{% url 'eatmap:signup' %}">新規ユーザ登録</a>
+              </li>
+              {% endif %}
+            </ul>
+
+            <form method="GET" action="{% url 'eatmap:search' %}" name="searchform">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                    <select class="form-control nav-link" name="pref">
+                        <option value="">都道府県</option>
+                        {% for item in pref_list %}
+                        <option value="{{item.pref}}">{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                    </li>
+                    <li class="nav-item">
+                    <select class="form-control nav-link" name="category_l">
+                        <option value="">カテゴリ</option>
+                        {% for item in category_list %}
+                        <option value="{{item.category_l}}">{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                    </li>
+                    <li class="nav-item">
+                        <input class="form-control nav-link" type="text" placeholder="フリーワード" aria-label="Search" name="freeword">
+                    </li>
+                    <span>　</span>
+                    <li class="nav-item">
+                        <button type="submit" class="btn common-btn">Search</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </nav>
+    <br>
+    <!-- messages の表示はここから記述   -->
+    {% if messages %}
+    <div class="container" stype="margin-top:1rem;">
+        <div class="message">
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="alert alert-success" role="alert">
+                {% elif message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                {% endif %}
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+
+    <br><br>
+    <!-- フッター -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <br/><br/>
+                <hr/>
+                <p>tabenavi</p>
+                <a href="https://api.gnavi.co.jp/api/scope/" target="_blank">
+                  <img src="https://techpit-market-prod.s3.amazonaws.com/uploads/part_attachment/file/4391/7c3eb00e-9f2a-407d-9705-eeba36fdb47a.gif" width="265" height="65" border="0" alt="グルメ情報検索サイト　ぐるなび">
+                </a>
+                <br/><br/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
